@@ -1,0 +1,2 @@
+# hatch-search-plugin
+
