@@ -42,3 +42,7 @@ Run local copy of elastic on docker:
 docker run -p 9200:9200 -p 9300:9300 \
     -v /Users/jose.mena/dev/HATCH/hatch-search-plugin/target/:/plugin elasticsearch:5.1.1
 ```
+Install the plugin:
+```
+bin/elasticsearch-plugin install file:///plugin/target/releases/hatch-search-plugin-5.1.1.zip
+```
