@@ -1,4 +1,4 @@
-package org.eurecat.bda.hatch.plugin;
+package org.eurecat.bda.hatch.plugin.analyze;
 
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.util.CharArraySet;

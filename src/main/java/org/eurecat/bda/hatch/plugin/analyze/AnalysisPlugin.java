@@ -1,4 +1,4 @@
-package org.eurecat.bda.hatch.plugin;
+package org.eurecat.bda.hatch.plugin.analyze;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.index.analysis.AnalyzerProvider;
