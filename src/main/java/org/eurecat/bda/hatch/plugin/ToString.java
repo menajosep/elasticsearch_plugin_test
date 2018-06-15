@@ -1,4 +1,4 @@
-package org.carrot2.elasticsearch;
+package org.eurecat.bda.hatch.plugin;
 
 import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.common.xcontent.XContentBuilder;

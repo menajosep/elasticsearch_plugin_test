@@ -1,6 +1,6 @@
-package org.carrot2.elasticsearch;
+package org.eurecat.bda.hatch.plugin;
 
-import org.carrot2.elasticsearch.ClusteringAction.TransportClusteringAction;
+import org.eurecat.bda.hatch.plugin.HatchSearchAction.TransportClusteringAction;
 import org.elasticsearch.action.ActionRequest;
 import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.client.Client;
@@ -24,7 +24,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ClusteringPlugin extends Plugin implements ActionPlugin {
+import static java.util.Collections.singletonList;
+
+public class HatchSearchPlugin extends Plugin implements ActionPlugin {
     /**
      * Master on/off switch property for the plugin (general settings).
      */
@@ -60,7 +62,7 @@ public class ClusteringPlugin extends Plugin implements ActionPlugin {
     private final boolean transportClient;
     private final boolean pluginEnabled;
 
-    public ClusteringPlugin(Settings settings) {
+    public HatchSearchPlugin(Settings settings) {
         this.pluginEnabled = settings.getAsBoolean(DEFAULT_ENABLED_PROPERTY_NAME, true);
         this.transportClient = TransportClient.CLIENT_TYPE.equals(Client.CLIENT_TYPE_SETTING_S.get(settings));
     }
@@ -68,9 +70,8 @@ public class ClusteringPlugin extends Plugin implements ActionPlugin {
     @Override
     public List<ActionHandler<? extends ActionRequest, ? extends ActionResponse>> getActions() {
         if (pluginEnabled) {
-            return Arrays.asList(
-                    new ActionHandler<>(ClusteringAction.INSTANCE, TransportClusteringAction.class),
-                    new ActionHandler<>(ListAlgorithmsAction.INSTANCE, ListAlgorithmsAction.TransportListAlgorithmsAction.class));
+            return singletonList(
+                    new ActionHandler<>(HatchSearchAction.INSTANCE, TransportClusteringAction.class));
         }
         return Collections.emptyList();
     }
@@ -79,15 +80,14 @@ public class ClusteringPlugin extends Plugin implements ActionPlugin {
     public List<RestHandler> getRestHandlers(Settings settings, RestController restController,
       ClusterSettings clusterSettings, IndexScopedSettings indexScopedSettings, SettingsFilter settingsFilter,
       IndexNameExpressionResolver indexNameExpressionResolver, Supplier<DiscoveryNodes> nodesInCluster) {
-    return Arrays.asList(
-        new ClusteringAction.RestClusteringAction(settings, restController),
-        new ListAlgorithmsAction.RestListAlgorithmsAction(settings, restController));
+        return singletonList(
+            new HatchSearchAction.RestClusteringAction(settings, restController));
     }
     
     @Override
     public Collection<Module> createGuiceModules() {
         if (pluginEnabled && !transportClient) {
-            return Collections.singletonList(new ClusteringModule());
+            return singletonList(new HatchSearchModule());
         } else {
             return Collections.emptyList();
         }
@@ -97,7 +97,7 @@ public class ClusteringPlugin extends Plugin implements ActionPlugin {
     public Collection<Class<? extends LifecycleComponent>> getGuiceServiceClasses() {
         if (pluginEnabled) {
             if (!transportClient) {
-                return Collections.singletonList(ControllerSingleton.class);
+                return singletonList(ControllerSingleton.class);
             }
         }
         return Collections.emptyList();

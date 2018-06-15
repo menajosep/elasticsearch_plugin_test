@@ -1,6 +1,6 @@
-package org.carrot2.elasticsearch;
+package org.eurecat.bda.hatch.plugin;
 
-import org.carrot2.elasticsearch.ClusteringAction.ClusteringActionRequest;
+import org.eurecat.bda.hatch.plugin.HatchSearchAction.ClusteringActionRequest;
 
 import java.util.HashMap;
 import java.util.Locale;

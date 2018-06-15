@@ -1,4 +1,4 @@
-package org.carrot2.elasticsearch;
+package org.eurecat.bda.hatch.plugin;
 
 import org.carrot2.core.*;
 import org.carrot2.core.attribute.CommonAttributesDescriptor;
@@ -48,7 +48,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
 
-import static org.carrot2.elasticsearch.LoggerUtils.emitErrorResponse;
+import static org.eurecat.bda.hatch.plugin.LoggerUtils.emitErrorResponse;
 import static org.elasticsearch.action.ValidateActions.addValidationError;
 import static org.elasticsearch.rest.RestRequest.Method.GET;
 import static org.elasticsearch.rest.RestRequest.Method.POST;
@@ -56,17 +56,17 @@ import static org.elasticsearch.rest.RestRequest.Method.POST;
 /**
  * Perform clustering of search results.
  */
-public class ClusteringAction
-        extends Action<ClusteringAction.ClusteringActionRequest,
-        ClusteringAction.ClusteringActionResponse,
-        ClusteringAction.ClusteringActionRequestBuilder> {
+public class HatchSearchAction
+        extends Action<HatchSearchAction.ClusteringActionRequest,
+        HatchSearchAction.ClusteringActionResponse,
+        HatchSearchAction.ClusteringActionRequestBuilder> {
     /* Action name. */
     public static final String NAME = "clustering/cluster";
 
     /* Reusable singleton. */
-    public static final ClusteringAction INSTANCE = new ClusteringAction();
+    public static final HatchSearchAction INSTANCE = new HatchSearchAction();
 
-    private ClusteringAction() {
+    private HatchSearchAction() {
         super(NAME);
     }
 
@@ -81,7 +81,7 @@ public class ClusteringAction
     }
 
     /**
-     * An {@link ActionRequest} for {@link ClusteringAction}.
+     * An {@link ActionRequest} for {@link HatchSearchAction}.
      */
     public static class ClusteringActionRequest extends ActionRequest {
         private SearchRequest searchRequest;
@@ -288,7 +288,7 @@ public class ClusteringAction
                 } catch (Throwable e1) {
                     // ignore
                 }
-                throw new ClusteringException("Failed to parse source [" + sSource + "]", e);
+                throw new HatchSearchException("Failed to parse source [" + sSource + "]", e);
             }
         }
 
@@ -450,7 +450,7 @@ public class ClusteringAction
     }
 
     /**
-     * An {@link ActionRequestBuilder} for {@link ClusteringAction}.
+     * An {@link ActionRequestBuilder} for {@link HatchSearchAction}.
      */
     public static class ClusteringActionRequestBuilder
             extends ActionRequestBuilder<ClusteringActionRequest,
@@ -458,7 +458,7 @@ public class ClusteringAction
             ClusteringActionRequestBuilder> {
 
         public ClusteringActionRequestBuilder(ElasticsearchClient client) {
-            super(client, ClusteringAction.INSTANCE, new ClusteringActionRequest());
+            super(client, HatchSearchAction.INSTANCE, new ClusteringActionRequest());
         }
 
         public ClusteringActionRequestBuilder setSearchRequest(SearchRequestBuilder builder) {
@@ -554,7 +554,7 @@ public class ClusteringAction
     }
 
     /**
-     * An {@link ActionResponse} for {@link ClusteringAction}.
+     * An {@link ActionResponse} for {@link HatchSearchAction}.
      */
     public static class ClusteringActionResponse extends ActionResponse implements ToXContent {
         /**
@@ -696,7 +696,7 @@ public class ClusteringAction
     }
 
     /**
-     * A {@link TransportAction} for {@link ClusteringAction}.
+     * A {@link TransportAction} for {@link HatchSearchAction}.
      */
     public static class TransportClusteringAction
             extends TransportAction<ClusteringActionRequest,
@@ -716,7 +716,7 @@ public class ClusteringAction
                                          IndexNameExpressionResolver indexNameExpressionResolver,
                                          NamedXContentRegistry xContentRegistry) {
             super(settings,
-                  ClusteringAction.NAME,
+                  HatchSearchAction.NAME,
                   threadPool,
                   actionFilters,
                   indexNameExpressionResolver,
@@ -725,7 +725,7 @@ public class ClusteringAction
             this.searchAction = searchAction;
             this.controllerSingleton = controllerSingleton;
             transportService.registerRequestHandler(
-                    ClusteringAction.NAME,
+                    HatchSearchAction.NAME,
                     ClusteringActionRequest::new,
                     ThreadPool.Names.SAME,
                     new TransportHandler());
@@ -1025,7 +1025,7 @@ public class ClusteringAction
                             break;
 
                         default:
-                            throw org.carrot2.elasticsearch.Preconditions.unreachable();
+                            throw Preconditions.unreachable();
                     }
 
                     // Determine the target field.
@@ -1047,7 +1047,7 @@ public class ClusteringAction
                                 target = content;
                                 break;
                             default:
-                                throw org.carrot2.elasticsearch.Preconditions.unreachable();
+                                throw Preconditions.unreachable();
                         }
 
                         // Separate multiple fields with a single dot (prevent accidental phrase gluing).
@@ -1112,7 +1112,7 @@ public class ClusteringAction
                             channel.sendResponse(e);
                         } catch (Exception e1) {
                             logger.warn("Failed to send error response for action ["
-                                    + ClusteringAction.NAME + "] and request [" + request + "]", e1);
+                                    + HatchSearchAction.NAME + "] and request [" + request + "]", e1);
                         }
                     }
                 });
@@ -1121,13 +1121,13 @@ public class ClusteringAction
     }
 
     /**
-     * An {@link BaseRestHandler} for {@link ClusteringAction}.
+     * An {@link BaseRestHandler} for {@link HatchSearchAction}.
      */
     public static class RestClusteringAction extends BaseRestHandler {
         /**
          * Action name suffix.
          */
-        public static String NAME = "_search_with_clusters";
+        public static String NAME = "_hatch_search";
 
         public RestClusteringAction(
                 Settings settings,
@@ -1188,11 +1188,11 @@ public class ClusteringAction
                     break;
 
                 default:
-                    throw org.carrot2.elasticsearch.Preconditions.unreachable();
+                    throw Preconditions.unreachable();
             }
 
             // Dispatch clustering request.
-            return channel -> client.execute(ClusteringAction.INSTANCE, actionBuilder.request(),
+            return channel -> client.execute(HatchSearchAction.INSTANCE, actionBuilder.request(),
                     new ActionListener<ClusteringActionResponse>() {
                         @Override
                         public void onResponse(ClusteringActionResponse response) {

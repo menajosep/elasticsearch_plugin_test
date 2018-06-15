@@ -38,7 +38,7 @@ ext {
 esplugin {
     name 'hatch-search-plugin'
     description 'A search plugin for HATCH\'s Elasticsearch'
-    classname 'org.carrot2.elasticsearch.ClusteringPlugin'
+    classname 'org.eurecat.bda.hatch.plugin.HatchSearchPlugin'
 }
 
 // We don't have unit tests, only integration tests.

@@ -1,4 +1,4 @@
-package org.carrot2.elasticsearch;
+package org.eurecat.bda.hatch.plugin;
 
 final class Preconditions {
     /**

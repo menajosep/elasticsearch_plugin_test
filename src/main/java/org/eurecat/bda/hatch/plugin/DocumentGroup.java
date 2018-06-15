@@ -1,4 +1,4 @@
-package org.carrot2.elasticsearch;
+package org.eurecat.bda.hatch.plugin;
 
 import org.carrot2.core.Cluster;
 import org.elasticsearch.common.io.stream.StreamInput;

@@ -1,4 +1,4 @@
-package org.carrot2.elasticsearch;
+package org.eurecat.bda.hatch.plugin;
 
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.ElasticsearchWrapperException;
@@ -10,21 +10,21 @@ import java.io.IOException;
  * Generic exception implementing {@link ElasticsearchWrapperException}
  */
 @SuppressWarnings("serial")
-public class ClusteringException extends ElasticsearchException implements ElasticsearchWrapperException {
+public class HatchSearchException extends ElasticsearchException implements ElasticsearchWrapperException {
 
-    public ClusteringException(Throwable cause) {
+    public HatchSearchException(Throwable cause) {
         super(cause);
     }
 
-    public ClusteringException(String msg, Object... args) {
+    public HatchSearchException(String msg, Object... args) {
         super(msg, args);
     }
 
-    public ClusteringException(String msg, Throwable cause, Object... args) {
+    public HatchSearchException(String msg, Throwable cause, Object... args) {
         super(msg, cause, args);
     }
 
-    public ClusteringException(StreamInput in) throws IOException {
+    public HatchSearchException(StreamInput in) throws IOException {
         super(in);
     }
 }

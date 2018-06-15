@@ -1,4 +1,4 @@
-package org.carrot2.elasticsearch;
+package org.eurecat.bda.hatch.plugin;
 
 import org.apache.logging.log4j.Logger;
 import org.carrot2.core.Controller;
@@ -23,7 +23,7 @@ import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 import java.util.*;
 
-import static org.carrot2.elasticsearch.ClusteringPlugin.*;
+import static org.eurecat.bda.hatch.plugin.HatchSearchPlugin.*;
 
 /**
  * Holds the {@link Controller} singleton initialized and ready throughout
