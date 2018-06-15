@@ -89,6 +89,7 @@ public class HatchSearchAction
         private List<FieldMappingSpec> fieldMapping = new ArrayList<>();
         private String algorithm;
         private int maxHits = Integer.MAX_VALUE;
+        private float diversity = 0;
         private Map<String, Object> attributes;
 
         /**
@@ -207,6 +208,37 @@ public class HatchSearchAction
             return maxHits;
         }
 
+
+        /**
+         * Sets the diversity factor to be used in the search.
+         * <p>
+         * Set to {@link 0} to use only relevance scoring.
+         */
+        public void setDiversity(float diversity) {
+            assert diversity >= 0;
+            this.diversity = diversity;
+        }
+
+        /**
+         * Sets {@link #setMaxHits(int)} from a string. An empty string or null means
+         * all hits should be included.
+         */
+        public void setDiversity(String value) {
+            if (value == null || value.trim().isEmpty()) {
+                setDiversity(0);
+            } else {
+                setDiversity(Float.parseFloat(value));
+            }
+        }
+
+        /**
+         * Returns the diversity factor to be applied to the search.
+         * If equal to {@link 0}, then only relevance scoring will be used.
+         */
+        public float getDiversity() {
+            return diversity;
+        }
+
         /**
          * Sets a map of runtime override attributes for clustering algorithms.
          */
@@ -280,6 +312,11 @@ public class HatchSearchAction
                 Object maxHits = asMap.get("max_hits");
                 if (maxHits != null) {
                     setMaxHits(maxHits.toString());
+                }
+
+                Object diversity = asMap.get("diversity");
+                if (diversity != null) {
+                    setDiversity(diversity.toString());
                 }
             } catch (Exception e) {
                 String sSource = "_na_";
@@ -412,6 +449,7 @@ public class HatchSearchAction
             out.writeOptionalString(queryHint);
             out.writeOptionalString(algorithm);
             out.writeInt(maxHits);
+            out.writeFloat(diversity);
 
             out.writeVInt(fieldMapping.size());
             for (FieldMappingSpec spec : fieldMapping) {
@@ -434,6 +472,7 @@ public class HatchSearchAction
             this.queryHint = in.readOptionalString();
             this.algorithm = in.readOptionalString();
             this.maxHits = in.readInt();
+            this.diversity = in.readFloat();
 
             int count = in.readVInt();
             while (count-- > 0) {
@@ -513,6 +552,16 @@ public class HatchSearchAction
             return this;
         }
 
+        public ClusteringActionRequestBuilder setDiversity(int diversity) {
+            super.request.setDiversity(diversity);
+            return this;
+        }
+
+        public ClusteringActionRequestBuilder setDiversity(String diversity) {
+            super.request.setDiversity(diversity);
+            return this;
+        }
+
         public ClusteringActionRequestBuilder addAttributes(Map<String, Object> attributes) {
             if (super.request.getAttributes() == null) {
                 super.request.setAttributes(new HashMap<String, Object>());
@@ -562,7 +611,7 @@ public class HatchSearchAction
          */
         static final class Fields {
             static final String SEARCH_RESPONSE = "search_response";
-            static final String CLUSTERS = "clusters";
+            static final String CLUSTERS = "bundles";
             static final String INFO = "info";
 
             // from SearchResponse
@@ -1254,6 +1303,11 @@ public class HatchSearchAction
             // max_hits
             if (request.hasParam("max_hits")) {
                 actionBuilder.setMaxHits(request.param("max_hits"));
+            }
+
+            // diversity
+            if (request.hasParam("diversity")) {
+                actionBuilder.setDiversity(request.param("diversity"));
             }
 
             // Field mappers.
