@@ -1,4 +1,3 @@
-
 #
 # The main "algorithm suite" definition file.
 #
@@ -10,11 +9,11 @@ suite: suite.xml
 resources: .
 
 #
-# Size of the internal pool of algorithm instances. 
-# This pool is sized automatically depending on the 
-# configuration of the search threadpool in ElasticSearch. 
+# Size of the internal pool of algorithm instances.
+# This pool is sized automatically depending on the
+# configuration of the search threadpool in ElasticSearch.
 #
-# If too many resources are consumed, the pool can be 
+# If too many resources are consumed, the pool can be
 # set to a fixed size using this option.
 #
 # controller.pool-size: 8
