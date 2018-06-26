@@ -793,6 +793,8 @@ public class HatchSearchAction
                 @Override
                 public void onResponse(SearchResponse response) {
                     final long tsSearchEnd = System.nanoTime();
+                    DiversityRescorer rescorer = new LevenshteinDiversityRescorer(clusteringRequest.fieldMapping, clusteringRequest.diversity);
+                    rescorer.rescore(response);
 
                     List<String> algorithmComponentIds = controllerSingleton.getAlgorithms();
                     String algorithmId = clusteringRequest.getAlgorithm();
